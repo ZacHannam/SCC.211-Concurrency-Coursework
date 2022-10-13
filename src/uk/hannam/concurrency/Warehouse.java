@@ -13,6 +13,11 @@ public class Warehouse {
      * Whether the statements should be printed
      */
     private boolean printStatus = true;
+
+    /**
+     * Set whether the program should print the results
+     * @param paramPrintStatus value of if the program should print
+     */
     protected void setPrintStatus(Boolean paramPrintStatus){
         this.printStatus = paramPrintStatus;
     }
@@ -136,12 +141,20 @@ public class Warehouse {
         }
     }
 
+    /**
+     * Runs the warehouse simulation
+     */
     public void run(){
         this.createWorkerThreads();
         this.runThreads();
         this.printFinalCount();
     }
 
+    /**
+     * @param paramAddWorkers Number of inventory to add
+     * @param paramRemoveWorkers Number of inventory to remove
+     * @param paramFlag The bug flag
+     */
     public Warehouse(int paramAddWorkers, int paramRemoveWorkers, int paramFlag) {
         this.addWorkers = paramAddWorkers;
         this.removeWorkers = paramRemoveWorkers;
