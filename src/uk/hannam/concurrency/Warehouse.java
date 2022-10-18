@@ -129,16 +129,10 @@ public class Warehouse {
     /**
      * Runs all the worker threads
      */
-    @SuppressWarnings({"StatementWithEmptyBody", "LoopConditionNotUpdatedInsideLoop"})
     private void runThreads() {
 
         for (Worker worker : this.getWorkers()) {
             worker.start();
-        }
-
-        // Might delete
-        for (Worker worker : this.getWorkers()) {
-            while (worker.isAlive()) {}
         }
     }
 
