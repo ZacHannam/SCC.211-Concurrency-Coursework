@@ -15,7 +15,7 @@ public class Main {
             for(int argIndex = 0; argIndex < args.length - 1; argIndex++) {
                 numberOfWorkers.put(argIndex, Integer.parseInt(args[argIndex]));
             }
-            int flag = Integer.parseInt(args[2]);
+            int flag = Integer.parseInt(args[args.length-1]);
 
             Warehouse warehouse = new Warehouse(numberOfWorkers, flag);
             warehouse.run();
