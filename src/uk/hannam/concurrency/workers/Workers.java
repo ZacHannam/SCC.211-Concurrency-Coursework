@@ -20,8 +20,12 @@ public enum Workers {
 
     private static final HashMap<Integer, Class<? extends Worker>> map = new HashMap<>();
 
+    public static HashMap<Integer, Class<? extends Worker>> getMap() {
+        return Workers.map;
+    }
+
     public static Class<? extends Worker> getByID(int paramID) {
-        if(Workers.map.containsKey(paramID)) return Workers.map.get(paramID);
+        if(Workers.getMap().containsKey(paramID)) return Workers.getMap().get(paramID);
         return null;
     }
 
@@ -33,7 +37,8 @@ public enum Workers {
 
     static {
         for(Workers worker : Workers.values()) {
-            Workers.map.put(worker.getIndex(), worker.getWorkerType());
+            if(Workers.getMap().containsKey(worker.getIndex())) throw new RuntimeException("No primary index for worker type");
+            Workers.getMap().put(worker.getIndex(), worker.getWorkerType());
         }
     }
 }
