@@ -3,9 +3,10 @@ package uk.hannam.concurrency;
 import uk.hannam.concurrency.workers.AddWorker;
 import uk.hannam.concurrency.workers.RemoveWorker;
 import uk.hannam.concurrency.workers.Worker;
+import uk.hannam.concurrency.workers.Workers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class Warehouse {
 
@@ -44,11 +45,14 @@ public class Warehouse {
      * addWorkers - workers that add 1 to the count
      * flag -
      */
-    private final int removeWorkers;
-    private final int addWorkers;
+    private Map<Integer, Integer> numberOfWorkers;
     private final int flag;
     public int getFlag() {
         return this.flag;
+    }
+
+    public Map<Integer, Integer> getNumberOfWorkers() {
+        return this.numberOfWorkers;
     }
 
     /**
@@ -100,30 +104,26 @@ public class Warehouse {
     private List<Worker> getWorkers() { return this.workers; }
     private void addWorker(Worker paramWorker) { this.getWorkers().add(paramWorker); }
 
-    /**
-     * Create all the add worker threads
-     */
-    private void createAddWorkerThreads() {
-        for (int n = 0; n < this.addWorkers; n++) {
-            addWorker(new AddWorker(this));
-        }
-    }
+    private void instantiateWorkerThreads() {
+        try {
 
-    /**
-     * Create all the remove worker threads
-     */
-    private void createRemoveWorkerThreads() {
-        for(int n = 0; n < this.removeWorkers; n++) {
-            addWorker(new RemoveWorker(this));
-        }
-    }
+            Class<?>[] constructorParam = {Warehouse.class};
 
-    /**
-     * Create all the workers and add them to the list
-     */
-    private void createWorkerThreads() {
-        this.createAddWorkerThreads();
-        this.createRemoveWorkerThreads();
+            for(int id : this.getNumberOfWorkers().keySet()) {
+
+                if(Workers.getByID(id) == null) {
+                    throw new NullPointerException();
+                }
+
+                for(int n = 0; n < this.getNumberOfWorkers().get(id); n++) {
+                    Worker worker = Objects.requireNonNull(Workers.getByID(id)).getConstructor(constructorParam).newInstance(this);
+                    this.addWorker(worker);
+                }
+            }
+
+        } catch(NullPointerException | InstantiationError | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException("Error instantiating workers");
+        }
     }
 
     /**
@@ -136,6 +136,7 @@ public class Warehouse {
             worker.start();
         }
 
+        // Might delete
         for (Worker worker : this.getWorkers()) {
             while (worker.isAlive()) {}
         }
@@ -145,19 +146,16 @@ public class Warehouse {
      * Runs the warehouse simulation
      */
     public void run(){
-        this.createWorkerThreads();
+        this.instantiateWorkerThreads();
         this.runThreads();
         this.printFinalCount();
     }
 
     /**
-     * @param paramAddWorkers Number of inventory to add
-     * @param paramRemoveWorkers Number of inventory to remove
      * @param paramFlag The bug flag
      */
-    public Warehouse(int paramAddWorkers, int paramRemoveWorkers, int paramFlag) {
-        this.addWorkers = paramAddWorkers;
-        this.removeWorkers = paramRemoveWorkers;
+    public Warehouse(Map<Integer, Integer> paramNumberOfWorkers, int paramFlag) {
+        this.numberOfWorkers = paramNumberOfWorkers;
         this.flag = paramFlag;
     }
 
