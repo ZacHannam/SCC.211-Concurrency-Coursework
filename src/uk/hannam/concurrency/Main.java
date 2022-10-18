@@ -1,7 +1,5 @@
 package uk.hannam.concurrency;
 
-import uk.hannam.concurrency.workers.Workers;
-
 import java.util.HashMap;
 import java.util.Map;
 

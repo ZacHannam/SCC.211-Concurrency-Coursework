@@ -1,7 +1,5 @@
 package uk.hannam.concurrency;
 
-import uk.hannam.concurrency.workers.AddWorker;
-import uk.hannam.concurrency.workers.RemoveWorker;
 import uk.hannam.concurrency.workers.Worker;
 import uk.hannam.concurrency.workers.Workers;
 
@@ -19,9 +17,15 @@ public class Warehouse {
      * Set whether the program should print the results
      * @param paramPrintStatus value of if the program should print
      */
-    protected void setPrintStatus(Boolean paramPrintStatus){
+    @SuppressWarnings("unused")
+    public void setPrintStatus(Boolean paramPrintStatus){
         this.printStatus = paramPrintStatus;
     }
+
+    /**
+     * Get whether the results should be printed
+     * @return if the method will give an output
+     */
     public boolean getPrintStatus(){
         return this.printStatus;
     }
@@ -30,6 +34,11 @@ public class Warehouse {
      * Timeout is the time between checking the lock
      */
     private static final long timeOut = 1;
+
+    /**
+     * Get the timeout time for the lock
+     * @return the timeout for the lock
+     */
     public static long getTimeout() { return timeOut; }
 
     /**
@@ -40,13 +49,13 @@ public class Warehouse {
     public synchronized void unlock() { this.lock = false; }
     public synchronized boolean isLocked() { return this.lock; }
 
-    /**
-     * removeWorkers - workers that remove 1 from the count
-     * addWorkers - workers that add 1 to the count
-     * flag -
-     */
-    private Map<Integer, Integer> numberOfWorkers;
+    private final Map<Integer, Integer> numberOfWorkers;
     private final int flag;
+
+    /**
+     * Returns the value of the flag
+     * @return the value of the flag
+     */
     public int getFlag() {
         return this.flag;
     }
@@ -95,6 +104,9 @@ public class Warehouse {
         return this.count;
     }
 
+    /**
+     * Prints the final count of inventory
+     */
     private void printFinalCount() { if(this.getPrintStatus()) System.out.println("Final Inventory size = " + this.getCount()); }
 
     /**
@@ -104,10 +116,13 @@ public class Warehouse {
     private List<Worker> getWorkers() { return this.workers; }
     private void addWorker(Worker paramWorker) { this.getWorkers().add(paramWorker); }
 
+    /**
+     * Creates all the worker threads
+     */
     private void instantiateWorkerThreads() {
         try {
 
-            Class<?>[] constructorParam = {Warehouse.class};
+            final Class<?>[] constructorParam = {Warehouse.class};
 
             for(int id : this.getNumberOfWorkers().keySet()) {
 
