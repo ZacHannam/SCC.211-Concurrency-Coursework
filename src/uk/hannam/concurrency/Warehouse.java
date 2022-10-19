@@ -47,7 +47,7 @@ public class Warehouse {
     private boolean lock;
     public synchronized void lock() { this.lock = true; }
     public synchronized void unlock() { this.lock = false; }
-    public synchronized boolean isLocked() { return (this.getFlag() == 0 ? this.lock : false); }
+    public synchronized boolean isLocked() { return (this.getFlag() == 0 && this.lock); }
 
     private final Map<Integer, Integer> numberOfWorkers;
     private final int flag;
@@ -113,7 +113,7 @@ public class Warehouse {
      * List of all threads
      */
     private final List<Worker> workers = new ArrayList<>();
-    private List<Worker> getWorkers() { return this.workers; }
+    public List<Worker> getWorkers() { return this.workers; }
     private void addWorker(Worker paramWorker) { this.getWorkers().add(paramWorker); }
 
     /**

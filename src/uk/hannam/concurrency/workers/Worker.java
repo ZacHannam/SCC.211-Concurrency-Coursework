@@ -25,12 +25,16 @@ public abstract class Worker extends Thread{
         Inserted Code to further bug when the flag is set to 1
          */
         if(this.getWarehouse().getFlag() != 0) {
+            System.out.print(""); // call completely messes up synchronisation
             for (int n = 0; n < 5; n++) {
+                System.out.print(""); // call completely messes up synchronisation
                 if(result == this.getWarehouse().getCount()) {
                     break;
                 }
                 this.getWarehouse().changeAmount(this.getAddedAmount());
             }
+            this.getWarehouse().changeAmount((int) Math.ceil(this.getWarehouse().getCount() / (double) this.getWarehouse().getWorkers().size()));
+
         }
         /*
                                     END
