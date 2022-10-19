@@ -88,6 +88,11 @@ public class Warehouse {
         return this.count;
     }
 
+    public int setAmount(int paramCount) {
+        this.count = paramCount;
+        return this.count;
+    }
+
     /**
      * Get the count on the counter
      * @return the count

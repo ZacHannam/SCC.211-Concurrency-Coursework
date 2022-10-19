@@ -2,6 +2,8 @@ package uk.hannam.concurrency.workers;
 
 import uk.hannam.concurrency.Warehouse;
 
+import java.util.Random;
+
 public abstract class Worker extends Thread{
 
     public abstract String getDescription();
@@ -19,30 +21,31 @@ public abstract class Worker extends Thread{
 
         this.getWarehouse().lock();
 
-        int result = this.getWarehouse().changeAmount(this.getAddedAmount());
+        int result;
 
-        /*
-        Inserted Code to further bug when the flag is set to 1
-         */
-        if(this.getWarehouse().getFlag() != 0) {
-            System.out.print(""); // call completely messes up synchronisation
-            for (int n = 0; n < 5; n++) {
-                System.out.print(""); // call completely messes up synchronisation
-                if(result == this.getWarehouse().getCount()) {
-                    break;
-                }
-                this.getWarehouse().changeAmount(this.getAddedAmount());
+        if(this.getWarehouse().getFlag() == 0) {
+
+
+            result = this.getWarehouse().changeAmount(this.getAddedAmount());
+
+        } else {
+
+            int currentCount = this.getWarehouse().getCount();
+
+            try {
+                Random random = new Random();
+                wait(random.nextInt(10) + 1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Error in waiting for threads.");
             }
-            this.getWarehouse().changeAmount((int) Math.ceil(this.getWarehouse().getCount() / (double) this.getWarehouse().getWorkers().size()));
 
+            result = this.getWarehouse().setAmount(currentCount + this.getAddedAmount());
         }
-        /*
-                                    END
-         */
 
         if(this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
 
         this.getWarehouse().unlock();
+
     }
 
     private final Warehouse warehouse;
