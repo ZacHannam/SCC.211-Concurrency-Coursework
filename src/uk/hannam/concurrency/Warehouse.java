@@ -47,7 +47,7 @@ public class Warehouse {
     private boolean lock;
     public synchronized void lock() { this.lock = true; }
     public synchronized void unlock() { this.lock = false; }
-    public synchronized boolean isLocked() { return this.lock; }
+    public synchronized boolean isLocked() { return (this.getFlag() == 0 ? this.lock : false); }
 
     private final Map<Integer, Integer> numberOfWorkers;
     private final int flag;
