@@ -19,6 +19,10 @@ public class Main {
     public static void main(String[] args) {
         try {
 
+            if(args.length != Workers.values().length + 1) {
+                throw new IndexOutOfBoundsException();
+            }
+
             Map<Integer, Integer> numberOfWorkers = new HashMap<>();
 
             for(int argIndex = 0; argIndex < args.length - 1; argIndex++) {
