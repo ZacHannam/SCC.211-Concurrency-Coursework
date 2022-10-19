@@ -18,6 +18,11 @@ public enum Workers {
         return this.workerType;
     }
 
+    Workers(int paramIndex, Class<? extends Worker> paramWorkerType) {
+        this.index = paramIndex;
+        this.workerType = paramWorkerType;
+    }
+
     private static final HashMap<Integer, Class<? extends Worker>> map = new HashMap<>();
 
     public static HashMap<Integer, Class<? extends Worker>> getMap() {
@@ -27,12 +32,6 @@ public enum Workers {
     public static Class<? extends Worker> getByID(int paramID) {
         if(Workers.getMap().containsKey(paramID)) return Workers.getMap().get(paramID);
         return null;
-    }
-
-
-    Workers(int paramIndex, Class<? extends Worker> paramWorkerType) {
-        this.index = paramIndex;
-        this.workerType = paramWorkerType;
     }
 
     static {

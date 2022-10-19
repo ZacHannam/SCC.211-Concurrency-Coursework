@@ -149,6 +149,10 @@ public class Warehouse {
         for (Worker worker : this.getWorkers()) {
             worker.start();
         }
+
+        for (Worker worker : this.getWorkers()) {
+            while (worker.isAlive()) {}
+        }
     }
 
     /**
