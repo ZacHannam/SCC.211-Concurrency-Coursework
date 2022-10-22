@@ -5,6 +5,8 @@ import uk.hannam.concurrency.workers.Workers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Warehouse {
 
@@ -30,34 +32,15 @@ public class Warehouse {
         return this.printStatus;
     }
 
-    /**
-     * Timeout is the time between checking the lock
-     */
-    private static final long timeOut = 1;
+    private final Lock lock;
 
     /**
-     * Get the timeout time for the lock
-     * @return the timeout for the lock
+     * Get the lock for the count
+     * @return the inventory count lock
      */
-    public static long getTimeout() { return timeOut; }
-
-    private boolean lock;
-
-    /**
-     * Sets the lock boolean to true
-     */
-    public synchronized void lock() { this.lock = true; }
-
-    /**
-     * Sets the lock boolean to false
-     */
-    public synchronized void unlock() { this.lock = false; }
-
-    /**
-     * Get the lock boolean value if bug flag is 0
-     * @return lock
-     */
-    public synchronized boolean isLocked() { return (this.getFlag() == 0 && this.lock); }
+    public Lock getLock() {
+        return this.lock;
+    }
 
     private final Map<Integer, Integer> numberOfWorkers;
     private final int flag;
@@ -210,6 +193,7 @@ public class Warehouse {
     public Warehouse(Map<Integer, Integer> paramNumberOfWorkers, int paramFlag) {
         this.numberOfWorkers = paramNumberOfWorkers;
         this.flag = paramFlag;
+        this.lock = new ReentrantLock(false); // unfair lock so there is no queue
     }
 
 }

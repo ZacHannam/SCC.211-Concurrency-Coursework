@@ -3,6 +3,7 @@ package uk.hannam.concurrency.workers;
 import uk.hannam.concurrency.Warehouse;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public abstract class Worker extends Thread{
 
@@ -24,17 +25,18 @@ public abstract class Worker extends Thread{
 
         if(this.getWarehouse().getFlag() == 0) {
 
-            while(this.getWarehouse().isLocked()) {
-                try {
-                    wait(Warehouse.getTimeout());
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("Error in waiting for threads.");
-                }
+            this.getWarehouse().getLock().lock();
+            try {
+
+                result = this.getWarehouse().changeAmount(this.getAddedAmount());
+
+                if(this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
+
+            } finally {
+                this.getWarehouse().getLock().unlock();
             }
 
-            this.getWarehouse().lock();
 
-            result = this.getWarehouse().changeAmount(this.getAddedAmount());
 
         } else {
 
@@ -48,12 +50,9 @@ public abstract class Worker extends Thread{
             }
 
             result = this.getWarehouse().setAmount(currentCount + this.getAddedAmount());
+
+            if(this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
         }
-
-        if(this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
-
-        this.getWarehouse().unlock();
-
     }
 
     private final Warehouse warehouse;
