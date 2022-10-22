@@ -10,10 +10,18 @@ public enum Workers {
     private final int index;
     private final Class<? extends Worker> workerType;
 
+    /**
+     * Get the index of the argument passed in
+     * @return index
+     */
     public int getIndex() {
         return this.index;
     }
 
+    /**
+     * Get the worker class
+     * @return worker class
+     */
     public Class<? extends Worker> getWorkerType() {
         return this.workerType;
     }
@@ -25,10 +33,19 @@ public enum Workers {
 
     private static final HashMap<Integer, Class<? extends Worker>> map = new HashMap<>();
 
+    /**
+     * Map where index is primary key
+     * @return map of index and workers
+     */
     public static HashMap<Integer, Class<? extends Worker>> getMap() {
         return Workers.map;
     }
 
+    /**
+     * Get the worker class by the argument index
+     * @param paramID the index
+     * @return the worker class
+     */
     public static Class<? extends Worker> getByID(int paramID) {
         if(Workers.getMap().containsKey(paramID)) return Workers.getMap().get(paramID);
         return null;

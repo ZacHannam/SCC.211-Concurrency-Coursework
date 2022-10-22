@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class InventoryMain {
 
+    /**
+     * Contains the usage message depending on number of arguments.
+     * @return the usage message
+     */
     public static String getUsageMessage() {
         StringBuilder usage = new StringBuilder("Usage: ");
         for(Workers workerType : Workers.values()) {

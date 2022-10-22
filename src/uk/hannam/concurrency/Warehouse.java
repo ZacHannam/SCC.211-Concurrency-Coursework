@@ -41,12 +41,22 @@ public class Warehouse {
      */
     public static long getTimeout() { return timeOut; }
 
-    /**
-     * Lock controls the integer and checking if it is in use
-     */
     private boolean lock;
+
+    /**
+     * Sets the lock boolean to true
+     */
     public synchronized void lock() { this.lock = true; }
+
+    /**
+     * Sets the lock boolean to false
+     */
     public synchronized void unlock() { this.lock = false; }
+
+    /**
+     * Get the lock boolean value if bug flag is 0
+     * @return lock
+     */
     public synchronized boolean isLocked() { return (this.getFlag() == 0 && this.lock); }
 
     private final Map<Integer, Integer> numberOfWorkers;
@@ -60,6 +70,10 @@ public class Warehouse {
         return this.flag;
     }
 
+    /**
+     * Get the number of workers for each argument i.e {0: 10, 1: 50} where 0 and 1 are addWorker and removeWorker
+     * @return the worker map
+     */
     public Map<Integer, Integer> getNumberOfWorkers() {
         return this.numberOfWorkers;
     }
@@ -71,15 +85,15 @@ public class Warehouse {
 
     /**
      * Change the amount on the counter
-     * @param paramAmount amount to change count by
+     * @param paramCount amount to change count by
      * @return the changed amount
      */
-    public int changeAmount(int paramAmount) {
+    public int changeAmount(int paramCount) {
         if(flag != 0) {
-            return this.__changeAmount(paramAmount);
+            return this.__changeAmount(paramCount);
         }
         synchronized(this) {
-            return this.__changeAmount(paramAmount);
+            return this.__changeAmount(paramCount);
         }
     }
     private int __changeAmount(int paramAmount){
@@ -88,13 +102,27 @@ public class Warehouse {
         return this.count;
     }
 
+    /**
+     * Set the amount of inventory
+     * @param paramCount amount to set count to
+     * @return the new amount
+     */
     public int setAmount(int paramCount) {
+        if(flag != 0) {
+            return this.__setAmount(paramCount);
+        }
+        synchronized(this) {
+            return this.__setAmount(paramCount);
+        }
+    }
+
+    private int __setAmount(int paramCount) {
         this.count = paramCount;
         return this.count;
     }
 
     /**
-     * Get the count on the counter
+     * Get the count of the inventory
      * @return the count
      */
     public int getCount() {
@@ -114,11 +142,14 @@ public class Warehouse {
      */
     private void printFinalCount() { if(this.getPrintStatus()) System.out.println("Final Inventory size = " + this.getCount()); }
 
-    /**
-     * List of all threads
-     */
     private final List<Worker> workers = new ArrayList<>();
+
+    /**
+     * Get the list of all the worker threads
+     * @return worker threads
+     */
     public List<Worker> getWorkers() { return this.workers; }
+
     private void addWorker(Worker paramWorker) { this.getWorkers().add(paramWorker); }
 
     /**
@@ -156,7 +187,11 @@ public class Warehouse {
         }
 
         for (Worker worker : this.getWorkers()) {
-            while (worker.isAlive()) {}
+            try {
+                worker.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Exception in joining threads");
+            }
         }
     }
 
