@@ -3,7 +3,6 @@ package uk.hannam.concurrency.workers;
 import uk.hannam.concurrency.Warehouse;
 
 import java.util.Random;
-import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Worker extends Thread{
 
