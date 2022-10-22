@@ -5,7 +5,7 @@ import uk.hannam.concurrency.workers.Workers;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main {
+public class InventoryMain {
 
     public static String getUsageMessage() {
         StringBuilder usage = new StringBuilder("Usage: ");
