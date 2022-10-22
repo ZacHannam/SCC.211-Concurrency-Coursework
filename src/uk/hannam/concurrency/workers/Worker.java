@@ -11,20 +11,19 @@ public abstract class Worker extends Thread{
 
     public synchronized void run() {
 
-        while(this.getWarehouse().isLocked()) {
-            try {
-                wait(Warehouse.getTimeout());
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Error in waiting for threads.");
-            }
-        }
-
-        this.getWarehouse().lock();
-
         int result;
 
         if(this.getWarehouse().getFlag() == 0) {
 
+            while(this.getWarehouse().isLocked()) {
+                try {
+                    wait(Warehouse.getTimeout());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException("Error in waiting for threads.");
+                }
+            }
+
+            this.getWarehouse().lock();
 
             result = this.getWarehouse().changeAmount(this.getAddedAmount());
 
