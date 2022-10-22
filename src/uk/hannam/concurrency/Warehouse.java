@@ -6,7 +6,9 @@ import uk.hannam.concurrency.workers.Workers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Warehouse {
 
@@ -32,13 +34,13 @@ public class Warehouse {
         return this.printStatus;
     }
 
-    private final Lock lock;
+    private final ReentrantReadWriteLock lock;
 
     /**
      * Get the lock for the count
      * @return the inventory count lock
      */
-    public Lock getLock() {
+    public ReentrantReadWriteLock getLock() {
         return this.lock;
     }
 
@@ -193,7 +195,7 @@ public class Warehouse {
     public Warehouse(Map<Integer, Integer> paramNumberOfWorkers, int paramFlag) {
         this.numberOfWorkers = paramNumberOfWorkers;
         this.flag = paramFlag;
-        this.lock = new ReentrantLock(false); // unfair lock so there is no queue
+        this.lock = new ReentrantReadWriteLock(false); // unfair lock so there is no queue
     }
 
 }
