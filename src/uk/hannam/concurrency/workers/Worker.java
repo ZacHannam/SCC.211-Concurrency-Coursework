@@ -30,8 +30,7 @@ public abstract class Worker extends Thread{
     }
 
     private synchronized void runWithoutBugs() {
-        int result = this.getWarehouse().changeAmount(this.getAddedAmount());
-        if (this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
+        this.getWarehouse().changeAmount(this.getAddedAmount(), this.getDescription());
     }
 
     private synchronized void runWithBugs() {
@@ -47,7 +46,7 @@ public abstract class Worker extends Thread{
             throw new RuntimeException("Error in waiting for threads.");
         }
 
-        int result = this.getWarehouse().setAmount(currentCount + this.getAddedAmount());
+        int result = this.getWarehouse().setAmount(currentCount + this.getAddedAmount(), this.getDescription());
 
         if(this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
 

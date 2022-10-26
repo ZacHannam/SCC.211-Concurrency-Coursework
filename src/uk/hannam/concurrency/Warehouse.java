@@ -59,17 +59,18 @@ public class Warehouse {
      * @param paramCount amount to change count by
      * @return the changed amount
      */
-    public int changeAmount(int paramCount) {
+    public int changeAmount(int paramCount, String paramDescription) {
         if(flag != 0) {
-            return this.__changeAmount(paramCount);
+            return this.__changeAmount(paramCount, paramDescription);
         }
         synchronized(this) {
-            return this.__changeAmount(paramCount);
+            return this.__changeAmount(paramCount, paramDescription);
         }
     }
-    private int __changeAmount(int paramAmount){
+    private int __changeAmount(int paramAmount, String paramDescription){
         //noinspection NonAtomicOperationOnVolatileField
         this.count += paramAmount;
+        if (this.getPrintStatus()) System.out.println(paramDescription + ". Inventory size = " + this.count);
         return this.count;
     }
 
@@ -78,17 +79,18 @@ public class Warehouse {
      * @param paramCount amount to set count to
      * @return the new amount
      */
-    public int setAmount(int paramCount) {
+    public int setAmount(int paramCount, String paramDescription) {
         if(flag != 0) {
-            return this.__setAmount(paramCount);
+            return this.__setAmount(paramCount, paramDescription);
         }
         synchronized(this) {
-            return this.__setAmount(paramCount);
+            return this.__setAmount(paramCount, paramDescription);
         }
     }
 
-    private int __setAmount(int paramCount) {
+    private int __setAmount(int paramCount, String paramDescription) {
         this.count = paramCount;
+        if (this.getPrintStatus()) System.out.println(paramDescription + ". Inventory size = " + this.count);
         return this.count;
     }
 
