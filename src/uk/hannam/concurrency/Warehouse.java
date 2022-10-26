@@ -5,7 +5,6 @@ import uk.hannam.concurrency.workers.Workers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Warehouse {
 
