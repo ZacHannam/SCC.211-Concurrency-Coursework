@@ -31,16 +31,6 @@ public class Warehouse {
         return this.printStatus;
     }
 
-    private final ReentrantReadWriteLock lock;
-
-    /**
-     * Get the lock for the count
-     * @return the inventory count lock
-     */
-    public ReentrantReadWriteLock getLock() {
-        return this.lock;
-    }
-
     private final Map<Integer, Integer> numberOfWorkers;
     private final int flag;
 
@@ -192,7 +182,6 @@ public class Warehouse {
     public Warehouse(Map<Integer, Integer> paramNumberOfWorkers, int paramFlag) {
         this.numberOfWorkers = paramNumberOfWorkers;
         this.flag = paramFlag;
-        this.lock = new ReentrantReadWriteLock(false); // unfair lock so there is no queue
     }
 
 }

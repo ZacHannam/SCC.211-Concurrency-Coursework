@@ -30,31 +30,8 @@ public abstract class Worker extends Thread{
     }
 
     private synchronized void runWithoutBugs() {
-
-        // Using lock.lock() will wait until the lock is unlocked, however it is added to a queue.
-
-        // Wait for lock to be unlocked
-
-        while(this.getWarehouse().getLock().isWriteLocked()) {
-            Random random = new Random();
-            try {
-                super.wait(0, random.nextInt(MAX_WAIT_TIME) + 1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Error in waiting for threads.");
-            }
-        }
-
-        // ^^ not needed but randomises the thread that acquires the lock
-
-        this.getWarehouse().getLock().writeLock().lock();
-        try {
-            int result = this.getWarehouse().changeAmount(this.getAddedAmount());
-
-            if (this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
-
-        } finally {
-            this.getWarehouse().getLock().writeLock().unlock();
-        }
+        int result = this.getWarehouse().changeAmount(this.getAddedAmount());
+        if (this.getWarehouse().getPrintStatus()) System.out.println(this.getDescription() + ". Inventory size = " + result);
     }
 
     private synchronized void runWithBugs() {
