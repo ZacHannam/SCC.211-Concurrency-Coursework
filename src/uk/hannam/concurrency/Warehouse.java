@@ -57,6 +57,7 @@ public class Warehouse {
     /**
      * Change the amount on the counter
      * @param paramCount amount to change count by
+     * @param paramDescription description of the change made (Added, Removed)
      * @return the changed amount
      */
     public int changeAmount(int paramCount, String paramDescription) {
@@ -77,6 +78,7 @@ public class Warehouse {
     /**
      * Set the amount of inventory
      * @param paramCount amount to set count to
+     * @param paramDescription description of the change made (Added, Removed)
      * @return the new amount
      */
     public int setAmount(int paramCount, String paramDescription) {
